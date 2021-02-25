@@ -1,6 +1,6 @@
 {
-    "name": "gitbook-cli",
-    "version": "2.3.2",
+    "name": "simple-book-cli",
+    "version": "0.0.1",
     "homepage": "https://www.gitbook.com",
     "description": "CLI to generate books and documentation using gitbook",
     "main": "bin/gitbook.js",
@@ -38,6 +38,10 @@
         "gitbook": "./bin/gitbook.js"
     },
     "contributors": [
+        {
+            "name": "Alvis Zhao",
+            "email": "alvisisme@gmail.com"
+        },
         {
             "name": "Aaron O'Mullan",
             "email": "aaron@gitbook.com"
