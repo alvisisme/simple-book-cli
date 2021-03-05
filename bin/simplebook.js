@@ -1,6 +1,5 @@
 #! /usr/bin/env node
 
-var Q = require('q');
 var _ = require('lodash');
 var path = require('path');
 var program = require('commander');
@@ -9,7 +8,6 @@ var color = require('bash-color');
 
 var pkg = require('../package.json');
 var manager = require('../lib');
-var tags = require('../lib/tags');
 var commands = require('../lib/commands');
 
 // Which book is concerned?
@@ -27,23 +25,23 @@ function runPromise(p) {
     });
 }
 
-function printGitbookVersion(v) {
+function printSimpleBookVersion(v) {
     var actualVersion = (v.name != v.version)? ' ('+v.version+')' : '';
     return v.name + actualVersion;
 }
 
-// Init gitbook-cli
+// Init simplebook-cli
 manager.init();
 
 program
-    .option('-v, --gitbook [version]', 'specify GitBook version to use')
+    .option('-v, --simplebook [version]', 'specify SimpleBook version to use')
     .option('-d, --debug', 'enable verbose error')
-    .option('-V, --version', 'Display running versions of gitbook and gitbook-cli', function() {
+    .option('-V, --version', 'Display running versions of simplebook and simplebook-cli', function() {
         console.log('CLI version:', pkg.version);
         runPromise(
-            manager.ensure(bookRoot, program.gitbook)
+            manager.ensure(bookRoot, program.simplebook)
             .then(function(v) {
-                console.log('GitBook version:', printGitbookVersion(v));
+                console.log('SimpleBook version:', printSimpleBookVersion(v));
                 process.exit(0);
             })
         );
@@ -56,7 +54,7 @@ program
         var versions = manager.versions();
 
         if (versions.length > 0) {
-            console.log('GitBook Versions Installed:');
+            console.log('SimpleBook Versions Installed:');
             console.log('');
 
             _.each(versions,function(v, i) {
@@ -67,10 +65,10 @@ program
                 console.log('   ', i == 0? '*' : ' ', text);
             });
             console.log('');
-            console.log('Run "gitbook update" to update to the latest version.');
+            console.log('Run "simplebook update" to update to the latest version.');
         } else {
             console.log('There is no versions installed');
-            console.log('You can install the latest version using: "gitbook fetch"');
+            console.log('You can install the latest version using: "simplebook fetch"');
         }
     });
 
@@ -81,7 +79,7 @@ program
         runPromise(
             manager.ensure(bookRoot, program.gitbook)
             .then(function(v) {
-                console.log('GitBook version is', printGitbookVersion(v));
+                console.log('SimpleBook version is', printSimpleBookVersion(v));
             })
         );
     });
@@ -93,7 +91,7 @@ program
         runPromise(
             manager.available()
             .then(function(available) {
-                console.log('Available GitBook Versions:');
+                console.log('Available SimpleBook Versions:');
                 console.log('');
                 console.log('    ', available.versions.join(', '));
                 console.log('');
@@ -117,7 +115,7 @@ program
             manager.install(version)
             .then(function(installedVersion) {
                 console.log('');
-                console.log(color.green('GitBook '+installedVersion+' has been installed'));
+                console.log(color.green('simple-book '+installedVersion+' has been installed'));
             })
         );
     });
@@ -132,7 +130,7 @@ program
         runPromise(
             manager.link(version, folder)
             .then(function() {
-                console.log(color.green('GitBook '+version+' point to '+folder));
+                console.log(color.green('simple-book '+version+' point to '+folder));
             })
         );
     });
@@ -144,14 +142,14 @@ program
         runPromise(
             manager.uninstall(version)
             .then(function() {
-                console.log(color.green('GitBook '+version+' has been uninstalled.'));
+                console.log(color.green('simple-book '+version+' has been uninstalled.'));
             })
         );
     });
 
 program
     .command('update [tag]')
-    .description('Update to the latest version of GitBook')
+    .description('Update to the latest version of simple-book')
     .action(function(tag){
         runPromise(
             manager.update(tag)
@@ -160,7 +158,7 @@ program
                     console.log('No update found!');
                 } else {
                     console.log('');
-                    console.log(color.green('GitBook has been updated to '+version));
+                    console.log(color.green('simple-book has been updated to '+version));
                 }
             })
         );
@@ -168,7 +166,7 @@ program
 
 program
     .command('help')
-    .description('List commands for GitBook')
+    .description('List commands for simple-book')
     .action(function(){
         runPromise(
             manager.ensureAndLoad(bookRoot, program.gitbook)
@@ -179,7 +177,7 @@ program
 
 program
     .command('*')
-    .description('run a command with a specific gitbook version')
+    .description('run a command with a specific simple-book version')
     .action(function(commandName){
         var args = parsedArgv._.slice(1);
         var kwargs = _.omit(parsedArgv, '$0', '_');
