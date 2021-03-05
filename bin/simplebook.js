@@ -178,13 +178,16 @@ program
 program
     .command('*')
     .description('run a command with a specific simple-book version')
-    .action(function(commandName){
+    .action(function(){
+        var commandName = parsedArgv._[0]
         var args = parsedArgv._.slice(1);
         var kwargs = _.omit(parsedArgv, '$0', '_');
 
         runPromise(
-            manager.ensureAndLoad(bookRoot, program.gitbook)
+            manager.ensureAndLoad(bookRoot, program.simplebook)
             .then(function(gitbook) {
+                // console.log(gitbook)
+                // console.log(gitbook.commands)
                 return commands.exec(gitbook.commands, commandName, args, kwargs);
             })
         );

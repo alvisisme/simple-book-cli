@@ -1,4 +1,4 @@
-# simplebook-cli
+# simple-book-cli
 
 GitBook命令行工具的个人修订版
 
